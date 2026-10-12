@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "music-toolbar",
+  "name": "Music Toolbar",
+  "version": "1.0.0",
+  "author": "Music Toolbar contributors",
+  "license": "MIT",
+  "description": "An Omarchy MPRIS widget with separate playback and settings panels, optional bar controls, synced lyrics, and CAVA visualization.",
+  "kinds": ["service", "bar-widget"],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Music Toolbar",
+    "category": "Media",
+    "allowMultiple": false,
+    "defaultSection": "center"
+  }
+}

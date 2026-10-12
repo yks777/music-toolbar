@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420" role="img" aria-labelledby="title description">
+  <title id="title">Music Toolbar main popup layout preview</title>
+  <desc id="description">A theme-neutral illustration of the three-column music popup, with album artwork and halo, track controls, synced lyrics, and a gear button that opens a separate Settings panel.</desc>
+  <defs>
+    <clipPath id="coverClip">
+      <circle cx="156" cy="191" r="65"/>
+    </clipPath>
+  </defs>
+
+  <rect x="16" y="14" width="868" height="392" rx="28" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="2"/>
+  <text x="52" y="62" fill="currentColor" font-size="20" font-weight="700">Now Playing</text>
+  <circle cx="838" cy="52" r="18" fill="none" stroke="currentColor" stroke-opacity="0.65"/>
+  <path d="M838 41v4m0 14v4m11-11h-4m-14 0h-4m18-8-3 3m-10 10-3 3m16 0-3-3m-10-10-3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="838" cy="52" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+
+  <g fill="none" stroke="currentColor" stroke-linecap="round" opacity="0.55">
+    <line x1="156" y1="100" x2="156" y2="112" stroke-width="3"/>
+    <line x1="156" y1="270" x2="156" y2="282" stroke-width="3"/>
+    <line x1="65" y1="191" x2="77" y2="191" stroke-width="3"/>
+    <line x1="235" y1="191" x2="247" y2="191" stroke-width="3"/>
+    <line x1="92" y1="127" x2="101" y2="136" stroke-width="3"/>
+    <line x1="211" y1="246" x2="220" y2="255" stroke-width="3"/>
+    <line x1="92" y1="255" x2="101" y2="246" stroke-width="3"/>
+    <line x1="211" y1="136" x2="220" y2="127" stroke-width="3"/>
+    <line x1="117" y1="105" x2="121" y2="117" stroke-width="3"/>
+    <line x1="191" y1="265" x2="195" y2="277" stroke-width="3"/>
+    <line x1="70" y1="155" x2="82" y2="159" stroke-width="3"/>
+    <line x1="230" y1="223" x2="242" y2="227" stroke-width="3"/>
+  </g>
+  <circle cx="156" cy="191" r="70" fill="none" stroke="currentColor" stroke-opacity="0.65" stroke-width="2"/>
+  <g clip-path="url(#coverClip)" fill="none" stroke="currentColor">
+    <rect x="91" y="126" width="130" height="130" fill="currentColor" fill-opacity="0.08" stroke="none"/>
+    <circle cx="156" cy="191" r="52" stroke-opacity="0.5" stroke-width="2"/>
+    <circle cx="156" cy="191" r="37" stroke-opacity="0.4" stroke-width="2"/>
+    <path d="M88 211c39-48 81 18 139-49v103H88z" fill="currentColor" fill-opacity="0.16" stroke="none"/>
+    <circle cx="156" cy="191" r="12" fill="currentColor" fill-opacity="0.6" stroke="none"/>
+  </g>
+
+  <text x="278" y="145" fill="currentColor" font-size="24" font-weight="700">Midnight Drive</text>
+  <text x="278" y="175" fill="currentColor" font-size="17" opacity="0.8">Northbound</text>
+  <text x="278" y="200" fill="currentColor" font-size="14" opacity="0.65">Static Radio</text>
+  <text x="278" y="222" fill="currentColor" font-size="13" opacity="0.55">Independent</text>
+
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M312 257l-13 10 13 10m-13-10h23"/>
+    <path d="M592 257l13 10-13 10m13-10h-23"/>
+  </g>
+  <circle cx="454" cy="267" r="23" fill="currentColor" fill-opacity="0.8"/>
+  <path d="M450 256v22l16-11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  <text x="278" y="322" fill="currentColor" font-size="13" opacity="0.65">1:42</text>
+  <rect x="324" y="313" width="239" height="4" rx="2" fill="currentColor" fill-opacity="0.22"/>
+  <rect x="324" y="313" width="76" height="4" rx="2" fill="currentColor" fill-opacity="0.8"/>
+  <circle cx="400" cy="315" r="7" fill="currentColor"/>
+  <text x="571" y="322" fill="currentColor" font-size="13" opacity="0.65">5:17</text>
+
+  <line x1="642" y1="83" x2="642" y2="348" stroke="currentColor" stroke-opacity="0.3"/>
+  <text x="755" y="117" text-anchor="middle" fill="currentColor" font-size="19" font-weight="700">Lyrics</text>
+  <text x="755" y="172" text-anchor="middle" fill="currentColor" font-size="15" opacity="0.55">Streetlights fade behind us</text>
+  <text x="755" y="216" text-anchor="middle" fill="currentColor" font-size="18" font-weight="700">The night is calling out</text>
+  <text x="755" y="259" text-anchor="middle" fill="currentColor" font-size="15" opacity="0.7">A quiet road, a radio</text>
+  <text x="755" y="300" text-anchor="middle" fill="currentColor" font-size="15" opacity="0.55">And all the world slows down</text>
+  <text x="755" y="337" text-anchor="middle" fill="currentColor" font-size="12" opacity="0.45">[LRCLIB]</text>
+</svg>
