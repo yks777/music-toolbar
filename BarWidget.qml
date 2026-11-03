@@ -81,9 +81,13 @@ BarWidget {
   readonly property int foregroundItemCount: (playerIconLabel.visible ? 1 : 0)
     + (trackLabel.visible ? 1 : 0)
     + (controlRow.visible ? 1 : 0)
-  readonly property real foregroundItemsWidth: playerIconLabel.width + trackLabel.width + controlRow.width
+  readonly property real foregroundItemsWidth: playerIconLabel.width + trackLabel.width + controlButtons.implicitWidth
   readonly property real foregroundNaturalWidth: foregroundItemsWidth
     + Style.space(8) * Math.max(0, foregroundItemCount - 1)
+  readonly property real controlFreeWidth: Math.max(0,
+    controlRow.width - controlButtons.implicitWidth)
+  readonly property bool controlsVisible: root.musicService ? root.musicService.showControls === true : root.fallbackShowControls
+  readonly property string controlsAlignment: root.musicService ? root.musicService.showControlsAlignment : "left"
   readonly property real pillTargetWidth: Math.max(
     Style.space(120), foregroundNaturalWidth + Style.space(16))
 
@@ -118,6 +122,7 @@ BarWidget {
   function openSettings() {
     if (panelLoader.item && panelLoader.item.opened) panelLoader.item.close()
     if (settingsLoader.item) settingsLoader.item.open()
+    else console.warn("Music Toolbar settings: settingsLoader.item is not loaded; settings panel will not open")
   }
 
   function openMainPanel() {
@@ -227,7 +232,10 @@ BarWidget {
     injectPanels()
   }
   onServiceChanged: injectPanels()
-  Component.onCompleted: refreshService()
+  Component.onCompleted: {
+    refreshService()
+    injectPanels()
+  }
 
   Timer {
     interval: 500
@@ -411,11 +419,24 @@ BarWidget {
 
       Row {
         id: controlRow
-        visible: root.musicService ? root.musicService.showControls === true : root.fallbackShowControls
-        width: visible ? controlButtons.implicitWidth : 0
+        visible: root.controlsVisible
+        width: root.controlsVisible
+          ? Math.max(0, foregroundLayer.width
+            - playerIconLabel.width
+            - trackLabel.width
+            - Style.space(8) * 2)
+          : 0
         height: Style.space(28)
-        spacing: Style.space(2)
+        spacing: 0
         anchors.verticalCenter: parent.verticalCenter
+
+        Item {
+          id: controlLeadSpacer
+          width: root.controlsAlignment === "center" ? root.controlFreeWidth / 2
+               : root.controlsAlignment === "right" ? root.controlFreeWidth : 0
+          height: Style.space(1)
+          visible: width > 0
+        }
 
         Row {
           id: controlButtons
@@ -423,11 +444,11 @@ BarWidget {
           anchors.verticalCenter: parent.verticalCenter
 
           Button {
-            width: Style.space(24)
-            height: Style.space(24)
+            width: Style.space(28)
+            height: Style.space(28)
             iconText: "󰒮"
             tooltipText: "Previous track"
-            iconSize: Style.font.iconSmall
+            iconSize: Style.font.icon
             foreground: root.widgetForeground
             accent: Commons.Color.accent
             background: "transparent"
@@ -455,11 +476,11 @@ BarWidget {
           }
 
           Button {
-            width: Style.space(24)
-            height: Style.space(24)
+            width: Style.space(28)
+            height: Style.space(28)
             iconText: "󰒭"
             tooltipText: "Next track"
-            iconSize: Style.font.iconSmall
+            iconSize: Style.font.icon
             foreground: root.widgetForeground
             accent: Commons.Color.accent
             background: "transparent"
@@ -467,6 +488,14 @@ BarWidget {
             enabled: root.activePlayer ? root.activePlayer.canGoNext === true : false
             onClicked: root.performNext()
           }
+        }
+
+        Item {
+          id: controlTrailSpacer
+          width: root.controlsAlignment === "center" ? root.controlFreeWidth / 2
+               : root.controlsAlignment === "left" ? root.controlFreeWidth : 0
+          height: Style.space(1)
+          visible: width > 0
         }
       }
 

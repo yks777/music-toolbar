@@ -87,6 +87,8 @@ Panel {
   function openSettings() {
     if (root.hostWidget && typeof root.hostWidget.openSettings === "function")
       root.hostWidget.openSettings()
+    else
+      console.warn("Music Toolbar settings: hostWidget is not wired; settings panel will not open")
   }
 
   function formatTime(seconds) {

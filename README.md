@@ -93,6 +93,7 @@ Test with at least one MPRIS player. If possible, start two players and verify A
 | Select a Player pill in Settings | Choose Auto or one detected MPRIS player |
 | Select a Style pill in Settings | Choose Wave, Bars, or Dots |
 | Toggle a Bar display setting | Show or hide the player icon, track text, or bar controls |
+| Set control alignment | Choose left, center, or right alignment for the playback controls in Settings |
 | Toggle Full-bar visualizer | Move the wave to a transparent full-topbar overlay; the pill turns transparent while it is on |
 | Escape | Close the currently open panel |
 
@@ -171,6 +172,10 @@ omarchy-shell music-toolbar setPlayer auto
 omarchy-shell music-toolbar setVisualizerStyle dots
 omarchy-shell music-toolbar setFullBarCava true
 omarchy-shell music-toolbar getFullBarCava
+omarchy-shell music-toolbar setShowControlsAlignment left
+omarchy-shell music-toolbar setShowControlsAlignment center
+omarchy-shell music-toolbar setShowControlsAlignment right
+omarchy-shell music-toolbar getShowControlsAlignment
 omarchy-shell music-toolbar status
 omarchy-shell music-toolbar playPause
 ```
@@ -208,6 +213,7 @@ Example:
 | `selectedPlayerKey` | string | `""` | Normalized player key; empty = Auto |
 | `showText` | bool | `true` | Show track title/artist in the bar |
 | `showControls` | bool | `false` | Show previous/play-pause/next in the bar |
+| `showControlsAlignment` | string | `"left"` | Alignment of playback controls in the bar: `"left"`, `"center"`, or `"right"` |
 | `showPlayerIcon` | bool | `true` | Show the leading player icon in the bar |
 | `fullBarCava` | bool | `false` | Render the CAVA wave in a transparent full-topbar overlay and turn the pill transparent |
 

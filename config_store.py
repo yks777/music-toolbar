@@ -12,6 +12,7 @@ import sys
 MAX_CONFIG_BYTES = 65536
 MAX_CAVA_CONFIG_BYTES = 16384
 VALID_STYLES = {"wave", "bars", "dots"}
+VALID_ALIGNMENTS = {"left", "center", "right"}
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW
 FILE_FLAGS = os.O_RDONLY | os.O_NONBLOCK | os.O_CLOEXEC | os.O_NOFOLLOW
 
@@ -107,11 +108,14 @@ def _validated_settings(raw):
 
     style = value.get("visualizerStyle", "wave")
     player_key = value.get("selectedPlayerKey", "")
+    alignment = value.get("showControlsAlignment", "left")
     if not isinstance(style, str) or style not in VALID_STYLES:
         style = "wave"
     if not isinstance(player_key, str):
         player_key = ""
     player_key = "".join(ch for ch in player_key.lower() if ch.isascii() and ch.isalnum())[:128]
+    if not isinstance(alignment, str) or alignment not in VALID_ALIGNMENTS:
+        alignment = "left"
 
     def boolean_setting(name, default):
         candidate = value.get(name, default)
@@ -123,6 +127,7 @@ def _validated_settings(raw):
         "showText": boolean_setting("showText", True),
         "showControls": boolean_setting("showControls", False),
         "showPlayerIcon": boolean_setting("showPlayerIcon", True),
+        "showControlsAlignment": alignment,
         "fullBarCava": boolean_setting("fullBarCava", False),
     }
 
@@ -136,10 +141,11 @@ def read_settings(path):
             "visualizerStyle": "wave",
             "selectedPlayerKey": "",
             "showText": True,
-            "showControls": False,
-            "showPlayerIcon": True,
-            "fullBarCava": False,
-        }
+        "showControls": False,
+        "showPlayerIcon": True,
+        "showControlsAlignment": "left",
+        "fullBarCava": False,
+    }
     try:
         return _validated_settings(_read_bounded(fd, path))
     finally:

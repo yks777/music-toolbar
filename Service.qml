@@ -14,6 +14,7 @@ Item {
   property string visualizerStyle: "wave"
   property bool showText: true
   property bool showControls: false
+  property string showControlsAlignment: "left"
   property bool showPlayerIcon: true
   // When true the pill visualizer is muted, the pill turns transparent, and
   // a transparent click-through overlay paints the wave across the topbar.
@@ -273,6 +274,13 @@ Item {
     return true
   }
 
+  function setShowControlsAlignment(value) {
+    if (typeof value !== "string") return false
+    if (value !== "left" && value !== "center" && value !== "right") return false
+    showControlsAlignment = value
+    return true
+  }
+
   function setShowPlayerIcon(value) {
     if (typeof value !== "boolean") return false
     showPlayerIcon = value
@@ -421,6 +429,7 @@ Item {
       showText: showText,
       showControls: showControls,
       showPlayerIcon: showPlayerIcon,
+      showControlsAlignment: showControlsAlignment,
       fullBarCava: fullBarCava,
       cavaAvailable: cavaAvailable
     })
@@ -481,6 +490,9 @@ Item {
           if (typeof data.showText === "boolean") showText = data.showText
           if (typeof data.showControls === "boolean") showControls = data.showControls
           if (typeof data.showPlayerIcon === "boolean") showPlayerIcon = data.showPlayerIcon
+          if (typeof data.showControlsAlignment === "string" &&
+              (data.showControlsAlignment === "left" || data.showControlsAlignment === "center" || data.showControlsAlignment === "right"))
+            showControlsAlignment = data.showControlsAlignment
           if (typeof data.fullBarCava === "boolean") fullBarCava = data.fullBarCava
         }
       } catch (parseError) {
@@ -498,6 +510,7 @@ Item {
       showText: showText,
       showControls: showControls,
       showPlayerIcon: showPlayerIcon,
+      showControlsAlignment: showControlsAlignment,
       fullBarCava: fullBarCava
     }, null, 2) + "\n"
 
@@ -521,6 +534,7 @@ Item {
   onShowTextChanged: if (configReady) saveTimer.restart()
   onShowControlsChanged: if (configReady) saveTimer.restart()
   onShowPlayerIconChanged: if (configReady) saveTimer.restart()
+  onShowControlsAlignmentChanged: if (configReady) saveTimer.restart()
   onFullBarCavaChanged: if (configReady) saveTimer.restart()
 
   Instantiator {
@@ -738,6 +752,14 @@ Item {
 
     function getFullBarCava(): string {
       return root.fullBarCava ? "true" : "false"
+    }
+
+    function setShowControlsAlignment(value: string): string {
+      return root.setShowControlsAlignment(value) ? "ok" : "invalid value"
+    }
+
+    function getShowControlsAlignment(): string {
+      return root.showControlsAlignment
     }
 
     function playPause(): string { return root.playPause() ? "ok" : "unhandled" }
