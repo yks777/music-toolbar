@@ -78,10 +78,12 @@ BarWidget {
   // foreground sits over the FullBarCava overlay. The bar keeps one CAVA
   // process; only the renderers fade, over ~250 ms, with no layout change.
   readonly property bool fullBarMode: musicService ? musicService.fullBarCava === true : false
-  readonly property int foregroundItemCount: (playerIconLabel.visible ? 1 : 0)
+  readonly property int foregroundItemCount: (iconElement.visible ? 1 : 0)
     + (trackLabel.visible ? 1 : 0)
     + (controlRow.visible ? 1 : 0)
-  readonly property real foregroundItemsWidth: playerIconLabel.width + trackLabel.width + controlButtons.implicitWidth
+  readonly property real foregroundItemsWidth: (iconElement.visible ? iconElement.width : 0)
+    + (trackLabel.visible ? trackLabel.width : 0)
+    + (controlRow.visible ? controlButtons.implicitWidth : 0)
   readonly property real foregroundNaturalWidth: foregroundItemsWidth
     + Style.space(8) * Math.max(0, foregroundItemCount - 1)
   readonly property bool controlsVisible: root.musicService ? root.musicService.showControls === true : root.fallbackShowControls
@@ -390,7 +392,13 @@ BarWidget {
 
       Item {
         id: iconElement
-        visible: root.musicService ? root.musicService.showPlayerIcon === true : root.fallbackShowPlayerIcon
+        // Leading icon slot: visible when the player icon is enabled, or when
+        // album-as-icon replaces it (so the artwork shows even while the
+        // player-icon toggle is off).
+        visible: root.musicService
+          ? (root.musicService.showPlayerIcon === true
+            || (root.showIconAsAlbum === true && root.artworkUrl !== ""))
+          : root.fallbackShowPlayerIcon
         width: Style.space(28)
         height: Style.space(28)
         anchors.verticalCenter: parent.verticalCenter
@@ -482,7 +490,6 @@ BarWidget {
             width: Style.space(28)
             height: Style.space(28)
             iconText: "󰒮"
-            tooltipText: "Previous track"
             iconSize: Style.font.icon
             foreground: root.widgetForeground
             accent: Commons.Color.accent
@@ -496,7 +503,6 @@ BarWidget {
             width: Style.space(28)
             height: Style.space(28)
             iconText: root.isPlaying ? "󰏤" : "󰐊"
-            tooltipText: root.isPlaying ? "Pause" : "Play"
             iconSize: Style.font.icon
             foreground: root.widgetForeground
             accent: Commons.Color.accent
@@ -514,7 +520,6 @@ BarWidget {
             width: Style.space(28)
             height: Style.space(28)
             iconText: "󰒭"
-            tooltipText: "Next track"
             iconSize: Style.font.icon
             foreground: root.widgetForeground
             accent: Commons.Color.accent

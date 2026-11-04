@@ -180,7 +180,7 @@ Panel {
         Toggle {
           id: iconSourceToggle
           width: parent.width
-          enabled: root.settingsReady && root.service ? root.service.showPlayerIcon === true : false
+          enabled: root.settingsReady
           label: "Show album as icon"
           description: "Use the current album artwork as the bar widget's leading icon instead of the player's app icon."
           checked: root.service ? root.service.showIconAsAlbum === true : false
