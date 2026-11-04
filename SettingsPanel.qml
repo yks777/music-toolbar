@@ -14,8 +14,6 @@ Panel {
   property var service: null
 
   readonly property color contentForeground: bar ? bar.barForeground : Commons.Color.foreground
-  readonly property string controlAlignment: service ? service.showControlsAlignment : "left"
-  readonly property bool controlControlsVisible: service ? service.showControls === true : false
   readonly property bool settingsReady: service ? service.configReady === true : false
   function close() {
     root.controller.hide()
@@ -170,117 +168,27 @@ Panel {
           }
         }
 
-        // Playback-control alignment: left / center / right within the bar widget.
-        // Only applies when playback controls are shown; persisted with the service.
+        // Icon source: show the player's app icon or the current album artwork
+        // as the leading element of the bar widget; persisted with the service.
         PanelSectionHeader {
           width: parent.width
-          text: "Control alignment"
+          text: "Icon source"
           foreground: root.contentForeground
           fontFamily: root.bar ? root.bar.fontFamily : Style.font.family
         }
 
-        Row {
-          id: controlAlignmentRow
+        Toggle {
+          id: iconSourceToggle
           width: parent.width
-          spacing: Style.space(4)
-
-          Item {
-            id: alignmentLeft
-            width: parent.width / 3 - spacing
-            height: Style.space(32)
-
-            MouseArea {
-              anchors.fill: parent
-              enabled: root.settingsReady && root.controlControlsVisible
-              onClicked: {
-                if (root.service) root.service.showControlsAlignment = "left"
-              }
-            }
-
-            Text {
-              anchors.centerIn: parent
-              text: "Left"
-              font.family: root.bar ? root.bar.fontFamily : Style.font.family
-              font.pixelSize: Style.font.bodySmall
-              color: root.controlAlignment === "left"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.background : Qt.darker(root.contentForeground, 1.6))
-                : root.contentForeground
-            }
-
-            Rectangle {
-              anchors.fill: parent
-              color: root.controlAlignment === "left"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.accent : "transparent")
-                : "transparent"
-              radius: Style.cornerRadius
-              z: -1
-            }
-          }
-
-          Item {
-            id: alignmentCenter
-            width: parent.width / 3 - spacing
-            height: Style.space(32)
-
-            MouseArea {
-              anchors.fill: parent
-              enabled: root.settingsReady && root.controlControlsVisible
-              onClicked: {
-                if (root.service) root.service.showControlsAlignment = "center"
-              }
-            }
-
-            Text {
-              anchors.centerIn: parent
-              text: "Center"
-              font.family: root.bar ? root.bar.fontFamily : Style.font.family
-              font.pixelSize: Style.font.bodySmall
-              color: root.controlAlignment === "center"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.background : Qt.darker(root.contentForeground, 1.6))
-                : root.contentForeground
-            }
-
-            Rectangle {
-              anchors.fill: parent
-              color: root.controlAlignment === "center"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.accent : "transparent")
-                : "transparent"
-              radius: Style.cornerRadius
-              z: -1
-            }
-          }
-
-          Item {
-            id: alignmentRight
-            width: parent.width / 3 - spacing
-            height: Style.space(32)
-
-            MouseArea {
-              anchors.fill: parent
-              enabled: root.settingsReady && root.controlControlsVisible
-              onClicked: {
-                if (root.service) root.service.showControlsAlignment = "right"
-              }
-            }
-
-            Text {
-              anchors.centerIn: parent
-              text: "Right"
-              font.family: root.bar ? root.bar.fontFamily : Style.font.family
-              font.pixelSize: Style.font.bodySmall
-              color: root.controlAlignment === "right"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.background : Qt.darker(root.contentForeground, 1.6))
-                : root.contentForeground
-            }
-
-            Rectangle {
-              anchors.fill: parent
-              color: root.controlAlignment === "right"
-                ? (root.settingsReady && root.controlControlsVisible ? Commons.Color.accent : "transparent")
-                : "transparent"
-              radius: Style.cornerRadius
-              z: -1
-            }
+          enabled: root.settingsReady && root.service ? root.service.showPlayerIcon === true : false
+          label: "Show album as icon"
+          description: "Use the current album artwork as the bar widget's leading icon instead of the player's app icon."
+          checked: root.service ? root.service.showIconAsAlbum === true : false
+          foreground: root.contentForeground
+          accent: Commons.Color.accent
+          fontFamily: root.bar ? root.bar.fontFamily : Style.font.family
+          onClicked: {
+            if (root.service) root.service.showIconAsAlbum = !root.service.showIconAsAlbum
           }
         }
 

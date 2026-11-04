@@ -84,10 +84,12 @@ BarWidget {
   readonly property real foregroundItemsWidth: playerIconLabel.width + trackLabel.width + controlButtons.implicitWidth
   readonly property real foregroundNaturalWidth: foregroundItemsWidth
     + Style.space(8) * Math.max(0, foregroundItemCount - 1)
-  readonly property real controlFreeWidth: Math.max(0,
-    controlRow.width - controlButtons.implicitWidth)
   readonly property bool controlsVisible: root.musicService ? root.musicService.showControls === true : root.fallbackShowControls
-  readonly property string controlsAlignment: root.musicService ? root.musicService.showControlsAlignment : "left"
+  readonly property string artworkUrl: musicService ? String(musicService.artUrl || "")
+    : String(activePlayer ? activePlayer.trackArtUrl || "" : "")
+  // Icon-source preference lives on the Service; declaring it here lets the
+  // leading-icon bindings react in real time when the user toggles it.
+  readonly property bool showIconAsAlbum: musicService ? musicService.showIconAsAlbum === true : false
   readonly property real pillTargetWidth: Math.max(
     Style.space(120), foregroundNaturalWidth + Style.space(16))
 
@@ -374,25 +376,73 @@ BarWidget {
     }
 
     // Foreground-only margins preserve readable spacing without shrinking CAVA.
+    // Fixed order inside the pill: icon → track title → playback buttons. The
+    // leading icon is either the player's app icon or the current album artwork,
+    // chosen with the showIconAsAlbum preference.
     Row {
       id: foregroundLayer
       anchors.fill: parent
       anchors.leftMargin: Style.space(8)
       anchors.rightMargin: Style.space(8)
       spacing: Style.space(8)
+      anchors.verticalCenter: parent.verticalCenter
       z: 1
 
-      Text {
-        id: playerIconLabel
-        textFormat: Text.PlainText
-        text: root.playerIcon
+      Item {
+        id: iconElement
         visible: root.musicService ? root.musicService.showPlayerIcon === true : root.fallbackShowPlayerIcon
-        width: visible ? implicitWidth : 0
-        color: root.widgetForeground
-        opacity: root.isWaiting ? 0.45 : 1.0
-        font.family: root.bar ? root.bar.fontFamily : Style.font.family
-        font.pixelSize: Style.font.icon
+        width: Style.space(28)
+        height: Style.space(28)
         anchors.verticalCenter: parent.verticalCenter
+
+        // Album artwork when the user prefers it over the player's app icon.
+        // Qt Quick Image has no radius property, so the rounded corners come
+        // from a layer mask, using the same MultiEffect pattern as the capsule.
+        layer.enabled: root.showIconAsAlbum === true && root.artworkUrl !== ""
+        layer.effect: MultiEffect {
+          maskEnabled: true
+          maskSource: albumArtMask
+          maskThresholdMin: 0.5
+          maskSpreadAtMin: 1.0
+        }
+
+        Rectangle {
+          id: albumArtMask
+          anchors.fill: parent
+          visible: false
+          layer.enabled: true
+          // Own rounding, not Style.cornerRadius: Hyprland rounding can be 0
+          // and the leading icon must still read as a rounded album tile.
+          radius: Math.min(Style.space(8), width / 2)
+          color: Commons.Color.foreground
+          antialiasing: true
+        }
+
+        Image {
+          id: albumArtImage
+          anchors.fill: parent
+          source: root.artworkUrl
+          fillMode: Image.PreserveAspectCrop
+          smooth: true
+          asynchronous: true
+          cache: true
+          clip: true
+          visible: root.showIconAsAlbum === true && root.artworkUrl !== ""
+        }
+
+        Text {
+          id: playerIconLabel
+          textFormat: Text.PlainText
+          text: root.playerIcon
+          anchors.fill: parent
+          color: root.widgetForeground
+          opacity: root.isWaiting ? 0.45 : 1.0
+          font.family: root.bar ? root.bar.fontFamily : Style.font.family
+          font.pixelSize: Style.font.icon
+          horizontalAlignment: Text.AlignHCenter
+          verticalAlignment: Text.AlignVCenter
+          visible: !(root.showIconAsAlbum === true && root.artworkUrl !== "")
+        }
       }
 
       Text {
@@ -420,28 +470,13 @@ BarWidget {
       Row {
         id: controlRow
         visible: root.controlsVisible
-        width: root.controlsVisible
-          ? Math.max(0, foregroundLayer.width
-            - playerIconLabel.width
-            - trackLabel.width
-            - Style.space(8) * 2)
-          : 0
+        width: root.controlsVisible ? controlButtons.implicitWidth : 0
         height: Style.space(28)
-        spacing: 0
         anchors.verticalCenter: parent.verticalCenter
-
-        Item {
-          id: controlLeadSpacer
-          width: root.controlsAlignment === "center" ? root.controlFreeWidth / 2
-               : root.controlsAlignment === "right" ? root.controlFreeWidth : 0
-          height: Style.space(1)
-          visible: width > 0
-        }
 
         Row {
           id: controlButtons
           spacing: Style.space(2)
-          anchors.verticalCenter: parent.verticalCenter
 
           Button {
             width: Style.space(28)
@@ -489,24 +524,6 @@ BarWidget {
             onClicked: root.performNext()
           }
         }
-
-        Item {
-          id: controlTrailSpacer
-          width: root.controlsAlignment === "center" ? root.controlFreeWidth / 2
-               : root.controlsAlignment === "left" ? root.controlFreeWidth : 0
-          height: Style.space(1)
-          visible: width > 0
-        }
-      }
-
-      Item {
-        id: foregroundSpacer
-        width: Math.max(0,
-          foregroundLayer.width
-          - root.foregroundItemsWidth
-          - Style.space(8) * root.foregroundItemCount)
-        visible: width > 0
-        height: Style.space(1)
       }
     }
   }

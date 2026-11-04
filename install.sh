@@ -42,6 +42,7 @@ files=(
   SettingsPanel.qml
   LyricsFetcher.qml
   CavaVisualizer.qml
+  FullBarCava.qml
   PlayerSelector.qml
   cava.ini
   config_store.py
@@ -68,6 +69,12 @@ for relative_path in "${files[@]}"; do
     *) install -m 0644 -- "$source_path" "$target_path" ;;
   esac
 done
+
+if [[ -f "$STATE_PATH" && ! -L "$STATE_PATH" ]]; then
+  omarchy-shell shell rescanPlugins
+  printf 'Music Toolbar is already installed and enabled in the %s section.\n' "$BAR_SECTION"
+  exit 0
+fi
 
 omarchy plugin validate "$TARGET_DIR"
 omarchy-shell shell rescanPlugins

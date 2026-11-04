@@ -93,7 +93,7 @@ Test with at least one MPRIS player. If possible, start two players and verify A
 | Select a Player pill in Settings | Choose Auto or one detected MPRIS player |
 | Select a Style pill in Settings | Choose Wave, Bars, or Dots |
 | Toggle a Bar display setting | Show or hide the player icon, track text, or bar controls |
-| Set control alignment | Choose left, center, or right alignment for the playback controls in Settings |
+| Set icon source | Choose the player's app icon or the current album artwork as the bar widget's leading icon in Settings |
 | Toggle Full-bar visualizer | Move the wave to a transparent full-topbar overlay; the pill turns transparent while it is on |
 | Escape | Close the currently open panel |
 
@@ -116,7 +116,7 @@ Both panels are anchored to the same bar widget and expose the standard `open()`
 
 ## Conditional bar rendering
 
-`BarWidget.qml` reads `showPlayerIcon`, `showText`, and `showControls` from the service. The icon, metadata label, and three-button transport strip each render only when their own preference is enabled. Previous/next and play/pause buttons are disabled when the active MPRIS player does not advertise the corresponding capability. The full-width CAVA backdrop is a separate clipped layer behind the foreground; it remains visible whenever CAVA is available, regardless of playback state or those three display preferences. When `fullBarCava` is true, the pill wave fades to opacity 0 and the pill fill and border fade to fully transparent over 250 ms while the icon, text, and controls stay visible floating over the full-bar wave; the single 96-bar CAVA process keeps running with the same PID and no layout or bar-height change occurs.
+`BarWidget.qml` reads `showPlayerIcon`, `showText`, and `showControls` from the service. The icon, metadata label, and three-button transport strip each render only when their own preference is enabled. The foreground order is fixed: leading icon, track title, playback buttons. The leading icon is either the player's app icon or the current album artwork, chosen with `showIconAsAlbum`. Previous/next and play/pause buttons are disabled when the active MPRIS player does not advertise the corresponding capability. The full-width CAVA backdrop is a separate clipped layer behind the foreground; it remains visible whenever CAVA is available, regardless of playback state or those three display preferences. When `fullBarCava` is true, the pill wave fades to opacity 0 and the pill fill and border fade to fully transparent over 250 ms while the icon, text, and controls stay visible floating over the full-bar wave; the single 96-bar CAVA process keeps running with the same PID and no layout or bar-height change occurs.
 
 The bar widget remains usable before its service is resolved through a direct MPRIS fallback for basic metadata and playback actions. Persistent settings are service-backed.
 
@@ -172,10 +172,9 @@ omarchy-shell music-toolbar setPlayer auto
 omarchy-shell music-toolbar setVisualizerStyle dots
 omarchy-shell music-toolbar setFullBarCava true
 omarchy-shell music-toolbar getFullBarCava
-omarchy-shell music-toolbar setShowControlsAlignment left
-omarchy-shell music-toolbar setShowControlsAlignment center
-omarchy-shell music-toolbar setShowControlsAlignment right
-omarchy-shell music-toolbar getShowControlsAlignment
+omarchy-shell music-toolbar setShowIconAsAlbum true
+omarchy-shell music-toolbar setShowIconAsAlbum false
+omarchy-shell music-toolbar getShowIconAsAlbum
 omarchy-shell music-toolbar status
 omarchy-shell music-toolbar playPause
 ```
@@ -213,7 +212,7 @@ Example:
 | `selectedPlayerKey` | string | `""` | Normalized player key; empty = Auto |
 | `showText` | bool | `true` | Show track title/artist in the bar |
 | `showControls` | bool | `false` | Show previous/play-pause/next in the bar |
-| `showControlsAlignment` | string | `"left"` | Alignment of playback controls in the bar: `"left"`, `"center"`, or `"right"` |
+| `showIconAsAlbum` | bool | `false` | Show the current album artwork as the leading bar icon instead of the player's app icon |
 | `showPlayerIcon` | bool | `true` | Show the leading player icon in the bar |
 | `fullBarCava` | bool | `false` | Render the CAVA wave in a transparent full-topbar overlay and turn the pill transparent |
 

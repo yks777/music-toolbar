@@ -108,14 +108,11 @@ def _validated_settings(raw):
 
     style = value.get("visualizerStyle", "wave")
     player_key = value.get("selectedPlayerKey", "")
-    alignment = value.get("showControlsAlignment", "left")
     if not isinstance(style, str) or style not in VALID_STYLES:
         style = "wave"
     if not isinstance(player_key, str):
         player_key = ""
     player_key = "".join(ch for ch in player_key.lower() if ch.isascii() and ch.isalnum())[:128]
-    if not isinstance(alignment, str) or alignment not in VALID_ALIGNMENTS:
-        alignment = "left"
 
     def boolean_setting(name, default):
         candidate = value.get(name, default)
@@ -127,7 +124,7 @@ def _validated_settings(raw):
         "showText": boolean_setting("showText", True),
         "showControls": boolean_setting("showControls", False),
         "showPlayerIcon": boolean_setting("showPlayerIcon", True),
-        "showControlsAlignment": alignment,
+        "showIconAsAlbum": boolean_setting("showIconAsAlbum", False),
         "fullBarCava": boolean_setting("fullBarCava", False),
     }
 
@@ -141,11 +138,11 @@ def read_settings(path):
             "visualizerStyle": "wave",
             "selectedPlayerKey": "",
             "showText": True,
-        "showControls": False,
-        "showPlayerIcon": True,
-        "showControlsAlignment": "left",
-        "fullBarCava": False,
-    }
+            "showControls": False,
+            "showPlayerIcon": True,
+            "showIconAsAlbum": False,
+            "fullBarCava": False,
+        }
     try:
         return _validated_settings(_read_bounded(fd, path))
     finally:
